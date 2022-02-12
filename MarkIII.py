@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 #Right Motors
 IN1 = 14
 IN2 = 15
-ENA = 18
+ENA = 12
 #Left Motors
 IN3 = 13
 IN4 = 19

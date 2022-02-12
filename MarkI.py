@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 #Right Motors
 IN1 = 17
 IN2 = 27
-ENA = 22
+ENA = 12
 #Left Motors
 IN3 = 14
 IN4 = 15
@@ -13,6 +13,8 @@ ENB = 18
 #Ultrasonic Sensor
 TRIG = 24
 ECHO = 23
+#LED
+led = 25
 
 
 def setup():
@@ -27,6 +29,9 @@ def setup():
         #ULTRASONIC SENSOR
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO,GPIO.IN)
+    GPIO.setup(led,GPIO.IN)
+    
+    GPIO.output(led, True)
 
 def forward():
     print("Going Forwards")
@@ -94,13 +99,13 @@ def automaticmode():
                 time.sleep(0.00001)  # Delay of 0.00001 seconds
                 GPIO.output(TRIG, False)  # Initialising trigger to LOW
 
-                #while GPIO.input(ECHO) == 0:  # Check whether the ECHO is LOW
-                    #GPIO.output(led, False)
+                while GPIO.input(ECHO) == 0:  # Check whether the ECHO is LOW
+                    GPIO.output(led, False)
                     
                 pulse_start = time.time()
 
-                #while GPIO.input(ECHO) == 1:  # Check whether the ECHO is HIGH
-                    #GPIO.output(led, False)
+                while GPIO.input(ECHO) == 1:  # Check whether the ECHO is HIGH
+                    GPIO.output(led, False)
                     
                 pulse_end = time.time()
                 pulse_duration = pulse_end - pulse_start  # time to get backward the pulse to sensor
@@ -115,20 +120,21 @@ def automaticmode():
             if avgDistance < 15:  # Check whether the distance is within 15 cm range
                 count = count + 1
                 stop()
-                time.sleep(1)
+                time.sleep(2)
                 backward()
-                time.sleep(1.5)
+                time.sleep(2)
                 if (count % 3 == 1) & (flag == 0):
                     right()
                     flag = 1
                 else:
                     left()
                     flag = 0
-                time.sleep(1.5)
+                time.sleep(2)
                 stop()
                 time.sleep(1)
             else:
                 forward()
+                #time.sleep(2)
                 flag = 0
     except:
         print("Something Went Wrong/n")
